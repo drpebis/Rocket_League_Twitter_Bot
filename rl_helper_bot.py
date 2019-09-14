@@ -35,6 +35,8 @@ def store_last_seen_id(last_seen_id, file_name):
 #this function is where the action happens, it searches for a specific
 #hashtag, then responds based off of a random number that corresponds
 #to an index of a list for a specific response.
+#once a tweet is sent out by the bot, the bot will favorite the person
+#who tweeted to the bot and then follow them.
 def reply_to_tweets():
     print('Searching for #rlhelper', flush=True)
 
@@ -51,10 +53,9 @@ def reply_to_tweets():
             print('Found #rlhelper', flush=True)
             print('Responding...', flush=True)
             value = random.randint(0,23)
-            #api.update_status('@' + mention.user.screen_name +
-                    #well memed!', mention.id)
-            api.update_status('@' + mention.user.screen_name + ' ' +
-                    list1[value], mention.id)
+            api.update_status(f'@{mention.user.screen_name} {list1[value]}', mention.id)
+            mention.favorite()
+            mention.user.follow()
 while True:
     reply_to_tweets()
     time.sleep(15)
