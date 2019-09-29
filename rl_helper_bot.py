@@ -3,18 +3,20 @@
 import tweepy
 import time
 import random
+from configparser import ConfigParser
 
 print('Starting bot...', flush=True)
 
-#You'll need a twitter dev account to generate this specific info
-CONSUMER_KEY = 'YOUR KEY'
-CONSUMER_SECRET = 'YOUR SECRET'
-ACCESS_KEY = 'YOUR KEY'
-ACCESS_SECRET = 'YOUR SECRET'
+# Load secrets from config.ini
+# You'll need a twitter dev account to generate the keys located in the config.ini
+conf = ConfigParser()
+conf.read('./etc/config.ini')
+tconf = conf['twitter_bot']
 
 
-auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
+# Authenticate to Twitter's API
+auth = tweepy.OAuthHandler(tconf.get('CONSUMER_KEY'), tconf.get('CONSUMER_SECRET'))
+auth.set_access_token(tconf.get('ACCESS_KEY'), tconf.get('ACCESS_SECRET'))
 api = tweepy.API(auth)
 
 FILE_NAME = 'last_seen_id.txt'
