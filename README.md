@@ -4,6 +4,9 @@ A helpful twitter bot written in python to combat toxicity in Rocket League.
 
 It is currently live at: https://twitter.com/helper_rl go check it out!
 
+# Collecting and responding via text metrics
+
+Adding code to collect the overall sentiment of tweets sent to this bot over the course of a day. The bot will then respond to a specific que tweet and display how positive/negative the tweets are. 
 
 # Dockerized
 
