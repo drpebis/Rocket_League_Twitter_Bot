@@ -20,6 +20,15 @@ auth.set_access_token(tconf.get('ACCESS_KEY'), tconf.get('ACCESS_SECRET'))
 api = tweepy.API(auth)
 
 FILE_NAME = 'last_seen_id.txt'
+WORDS_FILE = 'words.txt'
+
+regularWords = 0
+saltyWords = 0
+
+negativeWords = []
+with open(WORDS_FILE, "r") as f:
+    for line in f:
+        negativeWords.extend(line.split())
 
 def retrieve_last_seen_id(file_name):
     f_read = open(file_name, 'r')
@@ -33,14 +42,10 @@ def store_last_seen_id(last_seen_id, file_name):
     f_write.close()
     return
 
+count = 0
 
-#this function is where the action happens, it searches for a specific
-#hashtag, then responds based off of a random number that corresponds
-#to an index of a list for a specific response.
-#once a tweet is sent out by the bot, the bot will favorite the person
-#who tweeted to the bot and then follow them.
-def reply_to_tweets():
-    print('Searching for #rlhelper', flush=True)
+def reply_to_tweets(regularWords, saltyWords, count):
+    print('Searching for mentions...', flush=True)
 
     last_seen_id = retrieve_last_seen_id(FILE_NAME)
 
@@ -51,15 +56,63 @@ def reply_to_tweets():
         print(str(mention.id) + ' - ' + mention.full_text, flush=True)
         last_seen_id = mention.id
         store_last_seen_id(last_seen_id, FILE_NAME)
-        if '#rlhelper' in mention.full_text.lower():
-            print('Found #rlhelper', flush=True)
-            print('Responding...', flush=True)
-            value = random.randint(0,23)
-            api.update_status(f'@{mention.user.screen_name} {list1[value]}', mention.id)
-            mention.favorite()
+        #if 'salt level' in mention.full_text.lower():
+            #if regularWords != 0:
+                #saltIndex = saltyWords / regularWords
+                #post = api.update_status(f'@{mention.user.screen_name} the current salt index is {saltIndex}', mention.id)
+                #print(post.text)
+                #return
+        for word in mention.full_text.lower():
+            regularWords += 1
+
+        for word in negativeWords:
+            if word in mention.full_text.lower():
+                saltyWords+=1
+                print(f'found a salty word: {word}!')
+                value = random.randint(0,23)
+
+                #for word in mention.full_text.lower():
+                    #regularWords+=1
+
+            saltIndex = saltyWords / regularWords
+            post = api.update_status(f'@{mention.user.screen_name} {list1[value]} (The current salt index is: {saltIndex})', mention.id)
+            print(post.text)
             mention.user.follow()
+
+            #else:
+                #value = random.randint(0,23)
+                #post = api.update_status(f'@{mention.user.screen_name} {list1[value]}', mention.id)
+                #print(post.text)
+                #mention.user.follow()
+                #for word in mention.full_text.lower():
+                    #regularWords += 1
+
+        print('Responding...', flush=True)
+        #search_for_words(mention, regularWords, saltyWords)
+
+def search_for_words(mention, regularWords, saltyWords):
+    for word in negativeWords:
+        if word in mention.full_text.lower():
+            saltyWords += 1
+            print(f'found a salty word: {word}!')
+            value = random.randint(0,23)
+            post = api.update_status(f'@{mention.user.screen_name} {word} is pretty salty of a word to use! {list1[value]}', mention.id)
+            print(post.text)
+            mention.user.follow()
+            for word in mention.full_text.lower():
+                regularWords += 1
+            return
+
+        if count == 0:
+            value = random.randint(0,23)
+            post = api.update_status(f'@{mention.user.screen_name} {list1[value]}', mention.id)
+            print(post.text)
+            mention.user.follow()
+            for word in mention.full_text.lower():
+                regularWords += 1
+
 while True:
-    reply_to_tweets()
+    reply_to_tweets(regularWords, saltyWords, count)
     time.sleep(15)
 
     list1 = ['Don\'t worry, at least you weren\'t driving the scarab', 'All your opponents will now have camera shake turned on'
@@ -75,7 +128,6 @@ while True:
     , 'The sun is shining, the birds are chirping, we can still train!' , 'Forget that match, this next one you\'ll have will be fantastic'
     , 'Why worry about the last match when your next one is going to be awesome!' , 'Knock Knock, Who\'s there? Grand Champion. Grand Champion what season? Grand Champion Season 3...'
     , 'You never have to stop playing the Octane' , 'I bless you with full boost and a heart full of dreams']
-
 
     
 
