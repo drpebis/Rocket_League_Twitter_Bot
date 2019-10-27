@@ -25,6 +25,7 @@ WORDS_FILE = 'words.txt'
 regularWords = 0
 saltyWords = 0
 
+#This function takes the words.txt file and fills every word listed into the negativeWords list
 negativeWords = []
 with open(WORDS_FILE, "r") as f:
     for line in f:
@@ -42,8 +43,6 @@ def store_last_seen_id(last_seen_id, file_name):
     f_write.close()
     return
 
-count = 0
-
 def reply_to_tweets(regularWords, saltyWords, count):
     print('Searching for mentions...', flush=True)
 
@@ -56,6 +55,7 @@ def reply_to_tweets(regularWords, saltyWords, count):
         print(str(mention.id) + ' - ' + mention.full_text, flush=True)
         last_seen_id = mention.id
         store_last_seen_id(last_seen_id, FILE_NAME)
+	#This determines the radio of negative/positive words
         #if 'salt level' in mention.full_text.lower():
             #if regularWords != 0:
                 #saltIndex = saltyWords / regularWords
@@ -65,6 +65,7 @@ def reply_to_tweets(regularWords, saltyWords, count):
         for word in mention.full_text.lower():
             regularWords += 1
 
+	#Searches the tweet for the presence of any negative words
         for word in negativeWords:
             if word in mention.full_text.lower():
                 saltyWords+=1
