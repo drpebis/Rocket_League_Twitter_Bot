@@ -55,66 +55,69 @@ def reply_to_tweets(regularWords, saltyWords, count):
         print(str(mention.id) + ' - ' + mention.full_text, flush=True)
         last_seen_id = mention.id
         store_last_seen_id(last_seen_id, FILE_NAME)
-	#This determines the radio of negative/positive words
         #if 'salt level' in mention.full_text.lower():
             #if regularWords != 0:
                 #saltIndex = saltyWords / regularWords
                 #post = api.update_status(f'@{mention.user.screen_name} the current salt index is {saltIndex}', mention.id)
                 #print(post.text)
                 #return
-        for word in mention.full_text.lower():
-            regularWords += 1
-
-	#Searches the tweet for the presence of any negative words
-        for word in negativeWords:
-            if word in mention.full_text.lower():
-                saltyWords+=1
-                print(f'found a salty word: {word}!')
-                value = random.randint(0,23)
-
-                #for word in mention.full_text.lower():
-                    #regularWords+=1
-
-            saltIndex = saltyWords / regularWords
-            post = api.update_status(f'@{mention.user.screen_name} {list1[value]} (The current salt index is: {saltIndex})', mention.id)
-            print(post.text)
-            mention.user.follow()
-
-            #else:
-                #value = random.randint(0,23)
-                #post = api.update_status(f'@{mention.user.screen_name} {list1[value]}', mention.id)
-                #print(post.text)
-                #mention.user.follow()
-                #for word in mention.full_text.lower():
-                    #regularWords += 1
-
+        value = random.randint(0,23)
         print('Responding...', flush=True)
-        #search_for_words(mention, regularWords, saltyWords)
+        post = api.update_status(f'@{mention.user.screen_name} {list1[value]}', mention.id)
+        print(post.text)
+        mention.user.follow()
+        #for word in mention.full_text.lower():
+        #    regularWords += 1
 
-def search_for_words(mention, regularWords, saltyWords):
-    for word in negativeWords:
-        if word in mention.full_text.lower():
-            saltyWords += 1
-            print(f'found a salty word: {word}!')
-            value = random.randint(0,23)
-            post = api.update_status(f'@{mention.user.screen_name} {word} is pretty salty of a word to use! {list1[value]}', mention.id)
-            print(post.text)
-            mention.user.follow()
-            for word in mention.full_text.lower():
-                regularWords += 1
-            return
+        #for word in negativeWords:
+        #    if word in mention.full_text.lower():
+        #        saltyWords+=1
+        #        print(f'found a salty word: {word}!')
+        #        value = random.randint(0,23)
 
-        if count == 0:
-            value = random.randint(0,23)
-            post = api.update_status(f'@{mention.user.screen_name} {list1[value]}', mention.id)
-            print(post.text)
-            mention.user.follow()
-            for word in mention.full_text.lower():
-                regularWords += 1
+        #        for word in mention.full_text.lower():
+        #            regularWords+=1
 
+        #    saltIndex = saltyWords / regularWords
+        #    post = api.update_status(f'@{mention.user.screen_name} {list1[value]} (The current salt index is: {saltIndex})', mention.id)
+        #    print(post.text)
+        #    mention.user.follow()
+
+        #    else:
+        #        value = random.randint(0,23)
+        #        post = api.update_status(f'@{mention.user.screen_name} {list1[value]}', mention.id)
+        #        print(post.text)
+        #        mention.user.follow()
+        #        for word in mention.full_text.lower():
+        #            regularWords += 1
 while True:
     reply_to_tweets(regularWords, saltyWords, count)
     time.sleep(15)
+
+        #search_for_words(mention, regularWords, saltyWords)
+
+#def search_for_words(mention, regularWords, saltyWords):
+#   for word in negativeWords:
+#        if word in mention.full_text.lower():
+#            saltyWords += 1
+#            print(f'found a salty word: {word}!')
+#            value = random.randint(0,23)
+#            post = api.update_status(f'@{mention.user.screen_name} {word} is pretty salty of a word to use! {list1[value]}', mention.id)
+#            print(post.text)
+#            mention.user.follow()
+#            for word in mention.full_text.lower():
+#                regularWords += 1
+#            return
+
+#        if count == 0:
+#            value = random.randint(0,23)
+#            post = api.update_status(f'@{mention.user.screen_name} {list1[value]}', mention.id)
+#            print(post.text)
+#            mention.user.follow()
+#            for word in mention.full_text.lower():
+#                regularWords += 1
+
+
 
     list1 = ['Don\'t worry, at least you weren\'t driving the scarab', 'All your opponents will now have camera shake turned on'
     , 'Play a game with a yellow scarab, I promise you you\'ll have a great time', 'next time play with a USB steering wheel'
@@ -128,11 +131,7 @@ while True:
     , 'Yeah, but did any of the other players have such an amazing smile like you :)' , 'You\'ll win the next match, I believe in you!'
     , 'The sun is shining, the birds are chirping, we can still train!' , 'Forget that match, this next one you\'ll have will be fantastic'
     , 'Why worry about the last match when your next one is going to be awesome!' , 'Knock Knock, Who\'s there? Grand Champion. Grand Champion what season? Grand Champion Season 3...'
-    , 'You never have to stop playing the Octane' , 'I bless you with full boost and a heart full of dreams']
-
-    
-
-
+    , 'You never have to stop playing the Octane' , 'I bless you with full boost and a heart full of dreams'
 
 
 
