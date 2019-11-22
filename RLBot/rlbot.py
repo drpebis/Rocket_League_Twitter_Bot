@@ -75,6 +75,7 @@ def reply_to_tweets(regularWords, saltyWords, count):
                 post = api.update_status(f'@{mention.user.screen_name} {list1[value]}', mention.id)
                 print(post.text)
                 mention.user.follow()
+                return
 
 
         print('Responding (no salty words found)...', flush=True)
@@ -82,6 +83,7 @@ def reply_to_tweets(regularWords, saltyWords, count):
         post = api.update_status(f'@{mention.user.screen_name} {list1[value]}', mention.id)
         print(post.text)
         mention.user.follow()
+        return
 
 while True:
     reply_to_tweets(regularWords, saltyWords, count)
